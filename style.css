@@ -1,0 +1,10 @@
+*{
+    box-sizing: border-box;
+}
+.viewport-div{
+    min-width: 100vw;
+    min-height: 100vh;
+    
+    background-image: url('./img/background.png');
+    cursor: url('./img/cursor.png') 57 64,auto;
+}
