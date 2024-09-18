@@ -7,4 +7,14 @@
     
     background-image: url('./img/background.png');
     cursor: url('./img/cursor.png') 57 64,auto;
+
+    position: relative;
+    
+}
+.mole-hole{
+    width: 225px;
+    height: 225px;
+    border-radius: 150px;
+    background-color: black;
+    position: absolute;
 }
