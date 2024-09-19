@@ -2,8 +2,8 @@
     box-sizing: border-box;
 }
 .viewport-div{
-    min-width: 100vw;
-    min-height: 100vh;
+    min-width: 95vw;
+    min-height: 95vh;
     
     background-image: url('./img/background.png');
     cursor: url('./img/cursor.png') 57 64,auto;
@@ -15,6 +15,15 @@
     width: 225px;
     height: 225px;
     border-radius: 150px;
-    background-color: black;
+    background-color: #64361C;
+    
+    object-fit: cover;
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+#mole-hole-0{
+    background-image: url('./img/soil-0.png');
+}
+
