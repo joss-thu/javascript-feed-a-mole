@@ -26,4 +26,11 @@
 #mole-hole-0{
     background-image: url('./img/soil-0.png');
 }
+.show{
+    display: block;
+}
+.hide {
+    display: none;
+}
+
 

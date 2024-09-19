@@ -3,27 +3,24 @@ const viewPortDiv= document.querySelector('.viewport-div');
 const holesMax=20;
 const numPositionAttemptsLimit=1000;
 let positions= [];
+var moleholes;
 
 
 function populateMoleHoles(){
     //randomly calculate positions within the viewport
     //check if intersecting
     //if not, populate them with mole-holes
-    document.addEventListener('DOMContentLoaded',()=>{
+    
         for(let i= 1; i<=holesMax-1;i++){
             const moleHole= document.createElement('div');
             moleHole.classList.add('mole-hole');
             moleHole.id=`mole-hole-${i}`;
             moleHole.style.backgroundImage= `url('./img/soil-${i%4}.png')`;
             viewPortDiv.appendChild(moleHole);
-            
-            
-            console.log(`"url('./img/soil-${i%4}.png')"`)
         }
         moleholes= document.querySelectorAll('.mole-hole');
-        console.log(moleholes.length,)
         positionMoleHole(moleholes, positions);
-    });
+    
 }
 
 function isIntersecting(X,Y,width,height,positions){
@@ -54,13 +51,45 @@ function positionMoleHole(moleholes,positions){
             molehole.style.left= `${moleHoleX}px`
             molehole.style.top= `${moleHoleY}px`
             positions.push({X:moleHoleX, Y:moleHoleY});
+            
         }else{
             molehole.remove();
         }
 
+
     });
 }
 
+function showMoles(){
+    for(const moleHole of moleholes){
+        const moleImg= document.createElement('img');
+        moleImg.src='./img/mole-hungry.png';
+        moleHole.appendChild(moleImg);
+        wait(2000, moleImg);
+    }
+}
+
+function wait(time,moleImg){
+    const startTime= Date.now();
+
+    function checkTime(){
+        const currentTime= Date.now()
+        if(currentTime-startTime>=time){
+
+            moleImg.remove();
+            console.log('elapsed');
+
+            return;
+        }
+        requestAnimationFrame(checkTime);
+    }
+    requestAnimationFrame(checkTime);
+}
+
 //---------------------------------------------------------------------------------
-populateMoleHoles();
-    
+document.addEventListener('DOMContentLoaded', () => {
+    populateMoleHoles();
+    showMoles();
+});
+
+
