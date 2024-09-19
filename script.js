@@ -3,10 +3,10 @@ const viewPortDiv= document.querySelector('.viewport-div');
 const holesMax=20;
 const numPositionAttemptsLimit=1000;
 let positions= [];
-var moleholes;
+let moleHoles;
+let moleStatus='hungry';
 
-
-function populateMoleHoles(){
+function disperseMoleHoles(){
     //randomly calculate positions within the viewport
     //check if intersecting
     //if not, populate them with mole-holes
@@ -34,13 +34,13 @@ function isIntersecting(X,Y,width,height,positions){
     return false;
 }
 
-function positionMoleHole(moleholes,positions){
-    moleholes.forEach(molehole=>{
+function positionMoleHole(moleHoles,positions){
+    moleHoles.forEach(moleHole=>{
         let moleHoleX,moleHoleY;
         let numPositionAttempts=0;
 
-        const moleHoleWidth= molehole.clientWidth;
-        const moleHoleHeight= molehole.clientHeight;
+        const moleHoleWidth= moleHole.clientWidth;
+        const moleHoleHeight= moleHole.clientHeight;
         do{
             moleHoleX= Math.random() * (viewPortDiv.clientWidth-moleHoleWidth);
             moleHoleY= Math.random() * (viewPortDiv.clientHeight-moleHoleHeight);
@@ -48,48 +48,58 @@ function positionMoleHole(moleholes,positions){
            
         }while((isIntersecting(moleHoleX,moleHoleY,moleHoleWidth,moleHoleHeight,positions)) &&(numPositionAttempts<=numPositionAttemptsLimit) )
         if(numPositionAttempts<=numPositionAttemptsLimit){
-            molehole.style.left= `${moleHoleX}px`
-            molehole.style.top= `${moleHoleY}px`
+            moleHole.style.left= `${moleHoleX}px`
+            moleHole.style.top= `${moleHoleY}px`
             positions.push({X:moleHoleX, Y:moleHoleY});
             
         }else{
-            molehole.remove();
+            moleHole.remove();
         }
-
-
+        
     });
 }
 
 function showMoles(){
-    for(const moleHole of moleholes){
+    moleHoles= document.querySelectorAll('.mole-hole');
+    const moleIndex= Math.floor(Math.random()*moleholes.length)
+    const moleHole= moleholes[moleIndex];
+    if(!moleHole.querySelector('img')){
         const moleImg= document.createElement('img');
         moleImg.src='./img/mole-hungry.png';
         moleHole.appendChild(moleImg);
-        wait(2000, moleImg);
+        console.log('show mole image elapsed');
+        waitTimeMole(1800, moleImg);
     }
 }
 
-function wait(time,moleImg){
-    const startTime= Date.now();
-
-    function checkTime(){
-        const currentTime= Date.now()
-        if(currentTime-startTime>=time){
-
-            moleImg.remove();
-            console.log('elapsed');
-
-            return;
+function showMolesLoop(){
+    let timeThen= Date.now()
+    let delta= 0;
+    function wait(){
+        
+        if(Date.now()>timeThen){
+            showMoles();
+            timeThen= Date.now()+400-delta
+            delta= Math.floor(Math.random()*100)
+            console.log('show mole loop elapsed',Date.now()-timeThen);
         }
-        requestAnimationFrame(checkTime);
+        requestAnimationFrame(wait)
     }
-    requestAnimationFrame(checkTime);
+    requestAnimationFrame(wait);
 }
+
+function waitTimeMole(time,moleImg){
+    setTimeout(()=>{
+        moleImg.remove();
+    },time);
+}
+
+
 
 //---------------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-    populateMoleHoles();
-    showMoles();
+    disperseMoleHoles();
+    showMolesLoop();
 });
 
 
