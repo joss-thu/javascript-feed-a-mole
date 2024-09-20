@@ -1,10 +1,11 @@
-
 const viewPortDiv= document.querySelector('.viewport-div');
 const holesMax=20;
 const numPositionAttemptsLimit=1000;
 let positions= [];
 let moleHoles;
 let moles=[];
+let click= false;
+let score=0;
 
 mole_img_hungry= './img/mole-hungry.png';
 mole_img_sad= './img/mole-sad.png';
@@ -17,9 +18,9 @@ MOLE_MIN_INTERVAL= 2000
 MOLE_MAX_INTERVAL= 10000
 
 MOLE_HUNGRY_INTERVAL= 1500
-MOLE_SAD_INTERVAL= 500
-MOLE_FED_INTERVAL= 500
-MOLE_LEAVE_INTERVAL= 200
+MOLE_SAD_INTERVAL= 1000//500
+MOLE_FED_INTERVAL= 1000//500
+MOLE_LEAVE_INTERVAL= 500//200
 
 const getInterval= ()=>MOLE_MIN_INTERVAL+Math.floor(Math.random()*MOLE_MAX_INTERVAL)
 const getHungryInterval= ()=>MOLE_HUNGRY_INTERVAL
@@ -115,45 +116,35 @@ function getMoles(){
 }
 
 function moleLifeCycle(mole){
-    let img;
     switch(mole.status){
         case 'init':
-            console.log('in init')
             redrawMole(mole)
             mole.status= 'hungry';
             return 10;
         case 'gone':
-            //if(document.getElementById(mole.holeId).querySelector('img')){
-              //  hideMole(mole);
-            //}
-            console.log('in gone')
             redrawMole(mole)
             mole.status= 'hungry';
             return getInterval();
         case 'hungry':
-            console.log('in hungry')
-           // if(!document.getElementById(mole.holeId).querySelector('img')){
-                //img= mole_img_hungry
-                redrawMole(mole)
-                //showMole(mole,img);
-                mole.status= 'sad';
-            return getHungryInterval();
-           // }
-            break;
-
+            const hungryMole= document.querySelector(`#${mole.holeId} img#hungry`);
+            hungryMole.addEventListener('mousedown',()=>{
+                mole.status= 'fed';
+                click= true;
+                return 0;
+            });
+            redrawMole(mole)
+            mole.status= 'sad';
+            return getHungryInterval(); 
         case 'sad':
-            console.log('in sad')
-            //hideMole(mole);
-            //img= mole_img_sad;
-            //showMole(mole,img);
             redrawMole(mole)
             mole.status= 'leaving';
             return getSadInterval();
+        case 'fed':
+            console.log('score is: ', ++score)
+            redrawMole(mole)
+            mole.status= 'leaving';
+            return getFedInterval();
         case 'leaving':
-            console.log('in leaving')
-            //hideMole(mole);
-            //img= mole_img_leaving
-            //showMole(mole,img);
             redrawMole(mole)
             mole.status= 'gone';
             return getLeaveInterval();
@@ -161,31 +152,18 @@ function moleLifeCycle(mole){
 }
 
 function redrawMole(mole){
-
     let imgs= document.getElementById(mole.holeId).querySelectorAll('img')
-    
     imgs.forEach(img=>{
         img.classList.toggle('hide', true);
         img.classList.toggle('show', false);
         })
     if (mole.status==='init'){mole.status='hungry'}
     const img= document.getElementById(mole.holeId).querySelector(`#${mole.status}`);
-    console.log(img)
     if(img){
         img.classList.toggle('hide', false);
         img.classList.toggle('show', true);
     }
 }
-function showMole(mole,img){
-        const moleImg= document.createElement('img');
-        moleImg.src=img;
-        document.getElementById(mole.holeId).appendChild(moleImg);
-}
-
-function hideMole(mole){
-    document.getElementById(mole.holeId).querySelector('img').remove();
-}
-
 
 function nextFrame(moles){
     function wait(){
@@ -193,19 +171,18 @@ function nextFrame(moles){
             let currentTime= Date.now()
             if(currentTime>mole.startTime){
                mole.startTime = Date.now()+moleLifeCycle(mole);
-
             }
         }
         requestAnimationFrame(wait)
     }
      requestAnimationFrame(wait)
 }
-
 //---------------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
     disperseMoleHoles();
     getMoles();
     nextFrame(moles);
+
 });
 
 
