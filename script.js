@@ -136,6 +136,7 @@ function moleLifeCycle(mole){
             mole.status= 'sad';
             return getHungryInterval(); 
         case 'sad':
+            console.log('score is: ', score > 0 ? --score : score);
             redrawMole(mole)
             mole.status= 'leaving';
             return getSadInterval();
