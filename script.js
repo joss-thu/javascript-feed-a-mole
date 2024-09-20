@@ -17,9 +17,9 @@ MOLE_MIN_INTERVAL= 2000
 MOLE_MAX_INTERVAL= 10000
 
 MOLE_HUNGRY_INTERVAL= 1500
-MOLE_SAD_INTERVAL= 300
+MOLE_SAD_INTERVAL= 500
 MOLE_FED_INTERVAL= 500
-MOLE_LEAVE_INTERVAL= 300
+MOLE_LEAVE_INTERVAL= 200
 
 const getInterval= ()=>MOLE_MIN_INTERVAL+Math.floor(Math.random()*MOLE_MAX_INTERVAL)
 const getHungryInterval= ()=>MOLE_HUNGRY_INTERVAL
@@ -29,7 +29,7 @@ const getLeaveInterval= ()=>MOLE_LEAVE_INTERVAL
 
 
 function disperseMoleHoles(){
-        for(let i= 1; i<=holesMax-1;i++){
+        for(let i= 0; i<=holesMax;i++){
             const moleHole= document.createElement('div');
             moleHole.classList.add('mole-hole');
             moleHole.id=`mole-hole-${i}`;
@@ -67,7 +67,8 @@ function positionMoleHole(moleHoles,positions){
             moleHole.style.left= `${moleHoleX}px`
             moleHole.style.top= `${moleHoleY}px`
             positions.push({X:moleHoleX, Y:moleHoleY});
-            
+
+            addMoleImages(moleHole);  
         }else{
             moleHole.remove();
         }  
@@ -75,11 +76,38 @@ function positionMoleHole(moleHoles,positions){
     moleHoles= document.querySelectorAll('.mole-hole');
 }
 
+function addMoleImages(moleHole){
+    const mole_hungry= document.createElement('img');
+    const mole_sad= document.createElement('img');
+    const mole_fed= document.createElement('img');
+    const mole_leaving= document.createElement('img');
+
+    mole_hungry.src= mole_img_hungry;
+    mole_sad.src= mole_img_sad;
+    mole_fed.src= mole_img_fed;
+    mole_leaving.src= mole_img_leaving;
+
+    mole_hungry.id= 'hungry';
+    mole_sad.id= 'sad'
+    mole_fed.id= 'fed'
+    mole_leaving.id= 'leaving'
+
+    mole_hungry.classList.add('hide');
+    mole_sad.classList.add('hide');
+    mole_fed.classList.add('hide');
+    mole_leaving.classList.add('hide');
+
+    moleHole.appendChild(mole_hungry);
+    moleHole.appendChild(mole_sad);
+    moleHole.appendChild(mole_fed);
+    moleHole.appendChild(mole_leaving);
+}
+
 function getMoles(){
     moleHoles= document.querySelectorAll('.mole-hole');
     for(moleHole of moleHoles){
         moles.push({
-            status:'gone',
+            status:'init',
             holeId: moleHole.id,
             startTime: Date.now()
         })
@@ -89,36 +117,65 @@ function getMoles(){
 function moleLifeCycle(mole){
     let img;
     switch(mole.status){
+        case 'init':
+            console.log('in init')
+            redrawMole(mole)
+            mole.status= 'hungry';
+            return 10;
         case 'gone':
-            if(document.getElementById(mole.holeId).querySelector('img')){
-                hideMole(mole);
-            }
+            //if(document.getElementById(mole.holeId).querySelector('img')){
+              //  hideMole(mole);
+            //}
+            console.log('in gone')
+            redrawMole(mole)
             mole.status= 'hungry';
             return getInterval();
         case 'hungry':
-            if(!document.getElementById(mole.holeId).querySelector('img')){
-                img= mole_img_hungry
-                showMole(mole,img);
+            console.log('in hungry')
+           // if(!document.getElementById(mole.holeId).querySelector('img')){
+                //img= mole_img_hungry
+                redrawMole(mole)
+                //showMole(mole,img);
                 mole.status= 'sad';
             return getHungryInterval();
-            }
+           // }
             break;
 
         case 'sad':
-            hideMole(mole);
-            img= mole_img_sad;
-            showMole(mole,img);
+            console.log('in sad')
+            //hideMole(mole);
+            //img= mole_img_sad;
+            //showMole(mole,img);
+            redrawMole(mole)
             mole.status= 'leaving';
             return getSadInterval();
         case 'leaving':
-            hideMole(mole);
-            img= mole_img_leaving
-            showMole(mole,img);
+            console.log('in leaving')
+            //hideMole(mole);
+            //img= mole_img_leaving
+            //showMole(mole,img);
+            redrawMole(mole)
             mole.status= 'gone';
             return getLeaveInterval();
     }
 }
 
+function redrawMole(mole){
+
+    let imgs= document.getElementById(mole.holeId).querySelectorAll('img')
+    
+    imgs.forEach(img=>{
+        img.classList.toggle('hide', true);
+        img.classList.toggle('show', false);
+        })
+    if (mole.status==='init'){mole.status='hungry'}
+    const img= document.getElementById(mole.holeId).querySelector(`#${mole.status}`);
+    console.log(img)
+    if(img){
+        img.classList.toggle('hide', false);
+        img.classList.toggle('show', true);
+    }
+}
 function showMole(mole,img){
         const moleImg= document.createElement('img');
         moleImg.src=img;
@@ -147,11 +204,10 @@ function nextFrame(moles){
 //---------------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
     disperseMoleHoles();
-     getMoles();
-
+    getMoles();
+    nextFrame(moles);
 });
-   
-nextFrame(moles);
+
 
 
 
