@@ -1,5 +1,7 @@
 const viewPortDiv= document.querySelector('.viewport-div');
 const score_worm_container= document.querySelector('.worm-container');
+const score_text= document.querySelector('.score-text');
+
 const holesMax=20;
 const numPositionAttemptsLimit=1000;
 const SCOREMAX= 25;
@@ -22,8 +24,8 @@ MOLE_MAX_INTERVAL= 10000
 
 MOLE_HUNGRY_INTERVAL= 2000//1500
 MOLE_SAD_INTERVAL= 2000//500
-MOLE_FED_INTERVAL= 2000//500
-MOLE_LEAVE_INTERVAL= 500//200
+MOLE_FED_INTERVAL= 200
+MOLE_LEAVE_INTERVAL= 200
 
 const getInterval= ()=>MOLE_MIN_INTERVAL+Math.floor(Math.random()*MOLE_MAX_INTERVAL)
 const getHungryInterval= ()=>MOLE_HUNGRY_INTERVAL
@@ -169,7 +171,7 @@ function redrawMole(mole){
         img.classList.toggle('hide', true);
         img.classList.toggle('show', false);
         })
-    if (mole.status==='init'){mole.status='hungry'}
+    //if (mole.status==='init'){mole.status='fed'}
     const img= document.getElementById(mole.holeId).querySelector(`#${mole.status}`);
     if(img){
         img.classList.toggle('hide', false);
@@ -179,7 +181,7 @@ function redrawMole(mole){
 
 function updateScoreWorm(score){
     score_worm_container.style.width= `${(score/SCOREMAX)*100}%`;
-
+    score_text.textContent= 'Score: '+ score.toString().padStart(2,'0');
 }
 
 function nextFrame(moles){
