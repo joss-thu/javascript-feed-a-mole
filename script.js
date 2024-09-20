@@ -6,6 +6,13 @@ let positions= [];
 let moleHoles;
 let moles=[];
 
+mole_img_hungry= './img/mole-hungry.png';
+mole_img_sad= './img/mole-sad.png';
+mole_img_fed= './img/mole-fed.png';
+mole_img_leaving= './img/mole-leaving.png';
+cursor_bird= './img/cursor.png';
+cursor_bird_worm= './img/cursor-worm.png';
+
 MOLE_MIN_INTERVAL= 2000
 MOLE_MAX_INTERVAL= 10000
 
@@ -90,7 +97,7 @@ function moleLifeCycle(mole){
             return getInterval();
         case 'hungry':
             if(!document.getElementById(mole.holeId).querySelector('img')){
-                img= './img/mole-hungry.png';
+                img= mole_img_hungry
                 showMole(mole,img);
                 mole.status= 'sad';
             return getHungryInterval();
@@ -99,13 +106,13 @@ function moleLifeCycle(mole){
 
         case 'sad':
             hideMole(mole);
-            img= './img/mole-sad.png';
+            img= mole_img_sad;
             showMole(mole,img);
             mole.status= 'leaving';
             return getSadInterval();
         case 'leaving':
             hideMole(mole);
-            img= './img/mole-leaving.png';
+            img= mole_img_leaving
             showMole(mole,img);
             mole.status= 'gone';
             return getLeaveInterval();
