@@ -1,16 +1,35 @@
 *{
     box-sizing: border-box;
 }
+body{
+    background-image: url('./img/background.png');
+    margin: 0;
+}
 .viewport-div{
     min-width: 95vw;
     min-height: 95vh;
-    
-    background-image: url('./img/background.png');
     cursor: url('./img/cursor.png') 57 64,auto;
-
     position: relative;
-    
 }
+
+.worm-container {
+    max-width: 70vw;
+    width: 0%;
+    overflow: hidden;
+    transition: width 0.5s ease-in-out;
+    background-image: url('./img/background.png');
+}
+
+.worm-box {
+    width: 70vw;
+    height: 100px;
+    background-image: url('./img/background.png');
+}
+
+.worm-meter {
+    width: 70vw;
+}
+
 .mole-hole{
     width: 225px;
     height: 225px;

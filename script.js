@@ -1,6 +1,9 @@
 const viewPortDiv= document.querySelector('.viewport-div');
+const score_worm_container= document.querySelector('.worm-container');
 const holesMax=20;
 const numPositionAttemptsLimit=1000;
+const SCOREMAX= 10;
+
 let positions= [];
 let moleHoles;
 let moles=[];
@@ -17,9 +20,9 @@ cursor_bird_worm= './img/cursor-worm.png';
 MOLE_MIN_INTERVAL= 2000
 MOLE_MAX_INTERVAL= 10000
 
-MOLE_HUNGRY_INTERVAL= 1500
-MOLE_SAD_INTERVAL= 1000//500
-MOLE_FED_INTERVAL= 1000//500
+MOLE_HUNGRY_INTERVAL= 2000//1500
+MOLE_SAD_INTERVAL= 2000//500
+MOLE_FED_INTERVAL= 2000//500
 MOLE_LEAVE_INTERVAL= 500//200
 
 const getInterval= ()=>MOLE_MIN_INTERVAL+Math.floor(Math.random()*MOLE_MAX_INTERVAL)
@@ -136,12 +139,16 @@ function moleLifeCycle(mole){
             mole.status= 'sad';
             return getHungryInterval(); 
         case 'sad':
-            console.log('score is: ', score > 0 ? --score : score);
+            score > 0 ? --score : score;
+            console.log('score is: ', score);
+            updateScoreWorm(score);
             redrawMole(mole)
             mole.status= 'leaving';
             return getSadInterval();
         case 'fed':
-            console.log('score is: ', ++score)
+            score+=1;
+            console.log('score is: ', score)
+            updateScoreWorm(score);
             redrawMole(mole)
             mole.status= 'leaving';
             return getFedInterval();
@@ -164,6 +171,11 @@ function redrawMole(mole){
         img.classList.toggle('hide', false);
         img.classList.toggle('show', true);
     }
+}
+
+function updateScoreWorm(score){
+    score_worm_container.style.width= `${(score/SCOREMAX)*100}%`;
+
 }
 
 function nextFrame(moles){
