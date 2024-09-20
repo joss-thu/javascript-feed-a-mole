@@ -2,7 +2,7 @@ const viewPortDiv= document.querySelector('.viewport-div');
 const score_worm_container= document.querySelector('.worm-container');
 const holesMax=20;
 const numPositionAttemptsLimit=1000;
-const SCOREMAX= 10;
+const SCOREMAX= 25;
 
 let positions= [];
 let moleHoles;
@@ -149,6 +149,10 @@ function moleLifeCycle(mole){
             score+=1;
             console.log('score is: ', score)
             updateScoreWorm(score);
+            if(score>=SCOREMAX){
+                const winscrn= document.querySelector('.winscreen')
+                winscrn.style.display='block';
+            }
             redrawMole(mole)
             mole.status= 'leaving';
             return getFedInterval();
