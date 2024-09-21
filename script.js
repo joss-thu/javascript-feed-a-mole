@@ -2,14 +2,14 @@ const viewPortDiv= document.querySelector('.viewport-div');
 const score_worm_container= document.querySelector('.worm-container');
 const score_text= document.querySelector('.score-text');
 
-const holesMax=20;
+const holesMax=2;
 const numPositionAttemptsLimit=1000;
 const SCOREMAX= 50;
 
 let positions= [];
 let moleHoles;
 let moles=[];
-let click= false;
+
 let score=25;
 const states= ['hungry','sad','fed','leaving','king_hungry','king_sad','king_fed','king_leaving']
 
@@ -113,6 +113,16 @@ function getMoles(){
     }
 }
 
+function hungryMoleEventListener(selector,mole){
+    const hungryMole= document.querySelector(selector);
+    if(hungryMole){
+        hungryMole.addEventListener('mousedown',()=>{
+                mole.status= 'fed';
+            });     
+            return 0;
+    }
+}
+
 function moleLifeCycle(mole){
     switch(mole.status){
         case 'init':
@@ -120,27 +130,35 @@ function moleLifeCycle(mole){
             mole.status= 'hungry';
             return 10;
         case 'gone':
+            if(Math.random()>0){
+                mole.king=true
+            }
             redrawMole(mole)
             mole.status= 'hungry';
             return getInterval();
         case 'hungry':
-            const hungryMole= document.querySelector(`#${mole.holeId} img#hungry`);
-            hungryMole.addEventListener('mousedown',()=>{
-                mole.status= 'fed';
-                click= true;
-                return 0;
-            });
+            hungryMoleEventListener(`#${mole.holeId} img#hungry`,mole);
+            hungryMoleEventListener(`#${mole.holeId} img#king_hungry`,mole);
+        
             redrawMole(mole)
             mole.status= 'sad';
             return getHungryInterval(); 
         case 'sad':
+            
             score= score > 0 ? --score : score;
             updateScoreWorm(score);
             redrawMole(mole)
             mole.status= 'leaving';
             return getSadInterval();
         case 'fed':
-            score= score+2;
+            console.log(mole.king)
+            if(mole.king){
+                score+=4
+                console.log('in', score)
+            }else{
+                score+=2;
+            }
+            
             updateScoreWorm(score);
             if(score>=SCOREMAX){
                 const winscrn= document.querySelector('.winscreen')
@@ -151,6 +169,7 @@ function moleLifeCycle(mole){
             return getFedInterval();
         case 'leaving':
             redrawMole(mole)
+            mole.king=false;
             mole.status= 'gone';
             return getLeaveInterval();
     }
@@ -163,6 +182,9 @@ function redrawMole(mole){
         img.classList.toggle('show', false);
         })
     //if (mole.status==='init'){mole.status='fed'}
+    if(mole.king){
+        mole.status= `king_${mole.status}`
+    }
     const img= document.getElementById(mole.holeId).querySelector(`#${mole.status}`);
     if(img){
         img.classList.toggle('hide', false);

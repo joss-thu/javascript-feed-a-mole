@@ -87,7 +87,7 @@ body{
 .hide {
     display: none;
 }
-.mole-hole img#hungry:hover{
+.mole-hole img#hungry:hover, .mole-hole img#king_hungry:hover{
     cursor: url('./img/cursor-worm.png') 57 64,
         auto;
 }
