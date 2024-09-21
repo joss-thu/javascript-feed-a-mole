@@ -11,13 +11,17 @@ let moleHoles;
 let moles=[];
 let click= false;
 let score=25;
-const states= ['hungry','sad','fed','leaving']
+const states= ['hungry','sad','fed','leaving','king_hungry','king_sad','king_fed','king_leaving']
 
 const image_urls={
     mole_img_hungry: './img/mole-hungry.png',
     mole_img_sad: './img/mole-sad.png',
     mole_img_fed: './img/mole-fed.png',
     mole_img_leaving: './img/mole-leaving.png',
+    mole_img_king_hungry: './img/king-mole-hungry.png',
+    mole_img_king_sad: './img/king-mole-sad.png',
+    mole_img_king_fed: './img/king-mole-fed.png',
+    mole_img_king_leaving: './img/king-mole-leaving.png',
     cursor_bird: './img/cursor.png',
     cursor_bird_worm:'./img/cursor-worm.png',
 }
@@ -103,7 +107,8 @@ function getMoles(){
         moles.push({
             status:'init',
             holeId: moleHole.id,
-            startTime: Date.now()
+            startTime: Date.now(),
+            king:false,
         })
     }
 }
