@@ -47,7 +47,7 @@ function disperseMoleHoles(){
             const moleHole= document.createElement('div');
             moleHole.classList.add('mole-hole');
             moleHole.id=`mole-hole-${i}`;
-            moleHole.style.backgroundImage= `url('./img/soil-${i%4}.png')`;
+            moleHole.style.backgroundImage= `url('./img/soil-${Math.floor(Math.random()*4)}.png')`;
             viewPortDiv.appendChild(moleHole);
         }
         moleHoles= document.querySelectorAll('.mole-hole');
