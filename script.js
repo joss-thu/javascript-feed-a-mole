@@ -4,13 +4,14 @@ const score_text= document.querySelector('.score-text');
 
 const holesMax=20;
 const numPositionAttemptsLimit=1000;
-const SCOREMAX= 25;
+const SCOREMAX= 50;
 
 let positions= [];
 let moleHoles;
 let moles=[];
 let click= false;
-let score=0;
+let score=25;
+const statuses=['hungry','sad','fed','leaving']
 
 mole_img_hungry= './img/mole-hungry.png';
 mole_img_sad= './img/mole-sad.png';
@@ -88,6 +89,7 @@ function addMoleImages(moleHole){
     const mole_fed= document.createElement('img');
     const mole_leaving= document.createElement('img');
 
+
     mole_hungry.src= mole_img_hungry;
     mole_sad.src= mole_img_sad;
     mole_fed.src= mole_img_fed;
@@ -141,15 +143,13 @@ function moleLifeCycle(mole){
             mole.status= 'sad';
             return getHungryInterval(); 
         case 'sad':
-            score > 0 ? --score : score;
-            console.log('score is: ', score);
+            score= score > 0 ? --score : score;
             updateScoreWorm(score);
             redrawMole(mole)
             mole.status= 'leaving';
             return getSadInterval();
         case 'fed':
-            score+=1;
-            console.log('score is: ', score)
+            score= score+2;
             updateScoreWorm(score);
             if(score>=SCOREMAX){
                 const winscrn= document.querySelector('.winscreen')
