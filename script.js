@@ -11,20 +11,23 @@ let moleHoles;
 let moles=[];
 let click= false;
 let score=25;
-const statuses=['hungry','sad','fed','leaving']
+const states= ['hungry','sad','fed','leaving']
 
-mole_img_hungry= './img/mole-hungry.png';
-mole_img_sad= './img/mole-sad.png';
-mole_img_fed= './img/mole-fed.png';
-mole_img_leaving= './img/mole-leaving.png';
-cursor_bird= './img/cursor.png';
-cursor_bird_worm= './img/cursor-worm.png';
+const image_urls={
+    mole_img_hungry: './img/mole-hungry.png',
+    mole_img_sad: './img/mole-sad.png',
+    mole_img_fed: './img/mole-fed.png',
+    mole_img_leaving: './img/mole-leaving.png',
+    cursor_bird: './img/cursor.png',
+    cursor_bird_worm:'./img/cursor-worm.png',
+}
+
 
 MOLE_MIN_INTERVAL= 2000
 MOLE_MAX_INTERVAL= 10000
 
-MOLE_HUNGRY_INTERVAL= 2000//1500
-MOLE_SAD_INTERVAL= 2000//500
+MOLE_HUNGRY_INTERVAL= 1500//1500
+MOLE_SAD_INTERVAL= 500//500
 MOLE_FED_INTERVAL= 200
 MOLE_LEAVE_INTERVAL= 200
 
@@ -84,31 +87,14 @@ function positionMoleHole(moleHoles,positions){
 }
 
 function addMoleImages(moleHole){
-    const mole_hungry= document.createElement('img');
-    const mole_sad= document.createElement('img');
-    const mole_fed= document.createElement('img');
-    const mole_leaving= document.createElement('img');
-
-
-    mole_hungry.src= mole_img_hungry;
-    mole_sad.src= mole_img_sad;
-    mole_fed.src= mole_img_fed;
-    mole_leaving.src= mole_img_leaving;
-
-    mole_hungry.id= 'hungry';
-    mole_sad.id= 'sad'
-    mole_fed.id= 'fed'
-    mole_leaving.id= 'leaving'
-
-    mole_hungry.classList.add('hide');
-    mole_sad.classList.add('hide');
-    mole_fed.classList.add('hide');
-    mole_leaving.classList.add('hide');
-
-    moleHole.appendChild(mole_hungry);
-    moleHole.appendChild(mole_sad);
-    moleHole.appendChild(mole_fed);
-    moleHole.appendChild(mole_leaving);
+    for(let i=0; i<states.length;i++){
+        let img_url= image_urls[`mole_img_${states[i]}`]
+        const img= document.createElement('img'); 
+        img.src= img_url;
+        img.id= states[i];
+        img.classList.add('hide');
+        moleHole.appendChild(img);
+    }
 }
 
 function getMoles(){
@@ -201,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
     disperseMoleHoles();
     getMoles();
     nextFrame(moles);
-
 });
 
 
