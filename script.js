@@ -182,6 +182,12 @@ function redrawMole(mole){
     }
     const img= document.getElementById(mole.holeId).querySelector(`#${mole.status}`);
     if(img){
+        if(mole.status==='hungry' || mole.status==='king_hungry'){
+            img.classList.toggle('mole-out', true);
+        }
+        if(mole.status==='leaving'|| mole.status==='king_leaving'){
+            img.classList.toggle('mole-in', true);
+        }
         img.classList.toggle('hide', false);
         img.classList.toggle('show', true);
     }
