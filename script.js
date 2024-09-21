@@ -2,9 +2,10 @@ const viewPortDiv= document.querySelector('.viewport-div');
 const score_worm_container= document.querySelector('.worm-container');
 const score_text= document.querySelector('.score-text');
 
-const holesMax=2;
+const holesMax=20;
 const numPositionAttemptsLimit=1000;
 const SCOREMAX= 50;
+const KING_PROBABILITY=0.8
 
 let positions= [];
 let moleHoles;
@@ -25,7 +26,6 @@ const image_urls={
     cursor_bird: './img/cursor.png',
     cursor_bird_worm:'./img/cursor-worm.png',
 }
-
 
 MOLE_MIN_INTERVAL= 2000
 MOLE_MAX_INTERVAL= 10000
@@ -108,7 +108,7 @@ function getMoles(){
             status:'init',
             holeId: moleHole.id,
             startTime: Date.now(),
-            king:false,
+            king:true,
         })
     }
 }
@@ -130,7 +130,7 @@ function moleLifeCycle(mole){
             mole.status= 'hungry';
             return 10;
         case 'gone':
-            if(Math.random()>0){
+            if(Math.random()>KING_PROBABILITY){
                 mole.king=true
             }
             redrawMole(mole)
@@ -139,26 +139,21 @@ function moleLifeCycle(mole){
         case 'hungry':
             hungryMoleEventListener(`#${mole.holeId} img#hungry`,mole);
             hungryMoleEventListener(`#${mole.holeId} img#king_hungry`,mole);
-        
             redrawMole(mole)
             mole.status= 'sad';
             return getHungryInterval(); 
         case 'sad':
-            
             score= score > 0 ? --score : score;
             updateScoreWorm(score);
             redrawMole(mole)
             mole.status= 'leaving';
             return getSadInterval();
         case 'fed':
-            console.log(mole.king)
             if(mole.king){
                 score+=4
-                console.log('in', score)
             }else{
                 score+=2;
             }
-            
             updateScoreWorm(score);
             if(score>=SCOREMAX){
                 const winscrn= document.querySelector('.winscreen')
@@ -215,8 +210,3 @@ document.addEventListener('DOMContentLoaded', () => {
     getMoles();
     nextFrame(moles);
 });
-
-
-
-
-
