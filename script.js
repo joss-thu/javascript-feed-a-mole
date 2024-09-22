@@ -30,7 +30,7 @@ const image_urls={
 MOLE_MIN_INTERVAL= 2000
 MOLE_MAX_INTERVAL= 10000
 
-MOLE_HUNGRY_INTERVAL= Math.floor(Math.random()*4000)+500//1500
+MOLE_HUNGRY_INTERVAL= Math.floor(Math.random()*2000)+500//1500
 MOLE_SAD_INTERVAL= 500//500
 MOLE_FED_INTERVAL= 200
 MOLE_LEAVE_INTERVAL= 200
@@ -137,8 +137,20 @@ function moleLifeCycle(mole){
             mole.status= 'hungry';
             return getInterval();
         case 'hungry':
-            hungryMoleEventListener(`#${mole.holeId} img#hungry`,mole);
-            hungryMoleEventListener(`#${mole.holeId} img#king_hungry`,mole);
+            // hungryMoleEventListener(`#${mole.holeId} img#hungry`,mole);
+            // hungryMoleEventListener(`#${mole.holeId} img#king_hungry`,mole);
+            const hungryMole= document.querySelector(`#${mole.holeId} img#hungry`);
+            hungryMole.addEventListener('mousedown',()=>{
+                mole.status= 'fed';
+                return 0;
+            }); 
+            
+            const hungryKingMole= document.querySelector(`#${mole.holeId} img#king_hungry`);
+            hungryKingMole.addEventListener('mousedown',()=>{
+                mole.status= 'fed';
+                return 0;
+            });
+            
             redrawMole(mole)
             mole.status= 'sad';
             return getHungryInterval(); 
