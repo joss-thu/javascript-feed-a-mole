@@ -4,13 +4,13 @@
 body{
     background-image: url('./img/background.png');
     margin: 0;
+    object-fit: cover;
 }
 .viewport-div{
     min-width: 90vw;
     min-height: 90vh;
     cursor: url('./img/cursor.png') 57 64,auto;
     position: relative;
-    
 }
 .gameplane {
     width: 90vw;
