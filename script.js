@@ -31,15 +31,15 @@ MOLE_MIN_INTERVAL= 2000
 MOLE_MAX_INTERVAL= 10000
 
 MOLE_HUNGRY_INTERVAL= Math.floor(Math.random()*2000)+500//1500
-MOLE_SAD_INTERVAL= 500//500
+MOLE_SAD_INTERVAL= 1000//500
 MOLE_FED_INTERVAL= 200
 MOLE_LEAVE_INTERVAL= 200
 
-const getInterval= ()=>MOLE_MIN_INTERVAL+Math.floor(Math.random()*MOLE_MAX_INTERVAL)
-const getHungryInterval= ()=>MOLE_HUNGRY_INTERVAL
-const getSadInterval= ()=>MOLE_SAD_INTERVAL
-const getFedInterval= ()=>MOLE_FED_INTERVAL
-const getLeaveInterval= ()=>MOLE_LEAVE_INTERVAL
+const getInterval= ()=>Date.now()+MOLE_MIN_INTERVAL+Math.floor(Math.random()*MOLE_MAX_INTERVAL)
+const getHungryInterval= ()=>Date.now()+MOLE_HUNGRY_INTERVAL
+const getSadInterval= ()=>Date.now()+MOLE_SAD_INTERVAL
+const getFedInterval= ()=>Date.now()+MOLE_FED_INTERVAL
+const getLeaveInterval= ()=>Date.now()+MOLE_LEAVE_INTERVAL
 
 
 function disperseMoleHoles(){
@@ -118,8 +118,9 @@ function hungryMoleEventListener(selector,mole){
     if(hungryMole){
         hungryMole.addEventListener('mousedown',()=>{
                 mole.status= 'fed';
+                mole.startTime=0;
+                return;
             });     
-            return 0;
     }
 }
 
@@ -128,38 +129,30 @@ function moleLifeCycle(mole){
         case 'init':
             redrawMole(mole)
             mole.status= 'hungry';
-            return 10;
+            mole.startTime=0;
+            break;
         case 'gone':
             if(Math.random()>KING_PROBABILITY){
                 mole.king=true
             }
             redrawMole(mole)
+            mole.startTime=getInterval();
             mole.status= 'hungry';
-            return getInterval();
+            break;
         case 'hungry':
-            // hungryMoleEventListener(`#${mole.holeId} img#hungry`,mole);
-            // hungryMoleEventListener(`#${mole.holeId} img#king_hungry`,mole);
-            const hungryMole= document.querySelector(`#${mole.holeId} img#hungry`);
-            hungryMole.addEventListener('mousedown',()=>{
-                mole.status= 'fed';
-                return 0;
-            }); 
-            
-            const hungryKingMole= document.querySelector(`#${mole.holeId} img#king_hungry`);
-            hungryKingMole.addEventListener('mousedown',()=>{
-                mole.status= 'fed';
-                return 0;
-            });
-            
+            hungryMoleEventListener(`#${mole.holeId} img#hungry`,mole);
+            hungryMoleEventListener(`#${mole.holeId} img#king_hungry`,mole);
             redrawMole(mole)
             mole.status= 'sad';
-            return getHungryInterval(); 
+            mole.startTime= getHungryInterval();
+            break;
         case 'sad':
             score= score > 0 ? --score : score;
             updateScoreWorm(score);
             redrawMole(mole)
             mole.status= 'leaving';
-            return getSadInterval();
+            mole.startTime= getSadInterval();
+            break;
         case 'fed':
             if(mole.king){
                 score+=4
@@ -173,12 +166,14 @@ function moleLifeCycle(mole){
             }
             redrawMole(mole)
             mole.status= 'leaving';
-            return getFedInterval();
+            mole.startTime= getFedInterval();
+            break;
         case 'leaving':
             redrawMole(mole)
             mole.king=false;
             mole.status= 'gone';
-            return getLeaveInterval();
+            mole.startTime= getLeaveInterval();
+            break;
     }
 }
 
@@ -211,16 +206,20 @@ function updateScoreWorm(score){
 }
 
 function nextFrame(moles){
+    let runAgainAt= Date.now()+100;
     function wait(){
-        for(mole of moles){
-            let currentTime= Date.now()
-            if(currentTime>mole.startTime){
-               mole.startTime = Date.now()+moleLifeCycle(mole);
+        const currentTime= Date.now()
+        if(currentTime>=runAgainAt){
+            for(mole of moles){
+                if(currentTime>mole.startTime){
+                    moleLifeCycle(mole);
+                }
             }
+        runAgainAt= currentTime+100
         }
         requestAnimationFrame(wait)
     }
-     requestAnimationFrame(wait)
+    requestAnimationFrame(wait)
 }
 //---------------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
