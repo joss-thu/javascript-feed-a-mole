@@ -1,5 +1,6 @@
 *{
     box-sizing: border-box;
+    border: 1px solid red
     
 }
 body{
@@ -25,6 +26,8 @@ body{
     grid-template-areas: 
     "wormbox-area score-area"
     "viewport-area viewport-area";
+    align-items: flex-start;
+    justify-content: stretch;
 }
 .winscreen {
     width: 100%;
@@ -51,7 +54,7 @@ body{
     font-size: 4vw;
     text-align: left;
     justify-content: left;
-    width: 25vw;
+    width: 30vw;
 }
 
 .worm-container {
