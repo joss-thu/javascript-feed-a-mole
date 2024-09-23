@@ -11,7 +11,7 @@ let positions= [];
 let moleHoles;
 let moles=[];
 
-let score=25;
+let score=SCOREMAX/2;
 const states= ['hungry','sad','fed','leaving','king_hungry','king_sad','king_fed','king_leaving']
 
 const image_urls={
@@ -30,7 +30,7 @@ const image_urls={
 MOLE_MIN_INTERVAL= 2000
 MOLE_MAX_INTERVAL= 10000
 
-MOLE_HUNGRY_INTERVAL= Math.floor(Math.random()*2000)+500//1500
+MOLE_HUNGRY_INTERVAL= Math.floor(Math.random()*2000)+1000//1500
 MOLE_SAD_INTERVAL= 1000//500
 MOLE_FED_INTERVAL= 200
 MOLE_LEAVE_INTERVAL= 200
